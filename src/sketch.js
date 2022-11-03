@@ -63,11 +63,11 @@ function draw() {
   // noStroke()
   if (state == 0) {
     background("#8ecc39");
-    image(img_start, 0, height/4, height, height/2);
+    image(img_start, 0, width/4, width, width/2);
     glow(color(33, 58, 91, 100), 12);
     textAlign(CENTER, CENTER);
     textSize(width / 20);
-    text("Press space to start", height/2, height*2/3);
+    text("Press space to start", width/2, width*2/3);
   } else if (state == 1) {
     draw_background();
     if (s.eat(food)) {
@@ -86,9 +86,9 @@ function draw() {
     glow(color(33, 58, 91, 100), 12);
     textAlign(CENTER, CENTER);
     textSize(width / 10);
-    text("Game over", height/2, height*1/2);
+    text("Game over", width/2, width*1/2);
     textSize(width / 20);
-    text("Press space to start a new game", height/2, height*3/5);
+    text("Press space to start a new game", width/2, width*3/5);
   }
 }
 
