@@ -40,12 +40,12 @@ function pickLocation() {
 function draw_background() {
   stroke("white");
   fill("black");
-  rect(0, 0, width, height / 10);
+  rect(0, height - pannel_height, width, pannel_height);
   stroke("#8ecc39");
   drawingContext.shadowBlur = 32
   drawingContext.shadowColor = color("#8ecc39")
   for (let i = 0; i < width; i = i + scl){
-    for (let j = pannel_height; j < height; j = j + scl){
+    for (let j = 0; j < height - pannel_height; j = j + scl){
       if ((i/scl+j/scl) % 2) {
             fill("#8ecc39");
             rect(i, j, scl, scl);
