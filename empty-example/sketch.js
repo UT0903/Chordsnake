@@ -1,6 +1,5 @@
 function setup() {
   // put setup code here
-  fill("blue");
   createCanvas(600, 400);
 }
 

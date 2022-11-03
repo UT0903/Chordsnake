@@ -26,9 +26,7 @@ function mousePressed() {
   s.total++;
 }
 
-function draw() {
-  // background("#8ecc39");
-  // noStroke()
+function draw_background() {
   stroke("#8ecc39");
   for (let i = 0; i < width; i = i + scl){
     for (let j = 0; j < height; j = j + scl){
@@ -42,6 +40,12 @@ function draw() {
           }
     }
   }
+}
+
+function draw() {
+  // background("#8ecc39");
+  // noStroke()
+  draw_background();
   if (s.eat(food)) {
     pickLocation();
   }
@@ -52,6 +56,8 @@ function draw() {
 
   fill(255, 0, 100);
   rect(food.x, food.y, scl, scl);
+
+  fill(255, );
 }
 
 
