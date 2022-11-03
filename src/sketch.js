@@ -8,11 +8,11 @@ var scl = 40;
 var food;
 
 function setup() {
+  getAudioContext().suspend();
   createCanvas(600, 600);
   s = new Snake();
   frameRate(10);
   pickLocation();
-  
 }
 
 function pickLocation() {
@@ -65,13 +65,18 @@ function draw() {
 
 
 function keyPressed() {
+  Pd.start();
   if (keyCode === UP_ARROW) {
     s.dir(0, -1);
+    Pd.send('note', [60]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
+    Pd.send('note', [62]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
+    Pd.send('note', [64]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
+    Pd.send('note', [65]);
   }
 }
