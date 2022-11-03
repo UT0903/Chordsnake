@@ -36,10 +36,14 @@ function Snake(board_heigth, board_width) {
         console.log('starting over');
         this.total = 0;
         this.tail = [];
-        return true
+        this.x = 0;
+        this.y = 0;
+        this.xspeed = 1;
+        this.yspeed = 0;
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   this.update = function() {
