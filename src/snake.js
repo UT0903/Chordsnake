@@ -26,7 +26,7 @@ function Snake() {
     this.yspeed = y;
   }
 
-  this.death = function() {
+  this.checkDeath = function() {
     for (var i = 0; i < this.tail.length; i++) {
       var pos = this.tail[i];
       var d = dist(this.x, this.y, pos.x, pos.y);
@@ -34,8 +34,10 @@ function Snake() {
         console.log('starting over');
         this.total = 0;
         this.tail = [];
+        return true
       }
     }
+    return false
   }
 
   this.update = function() {
