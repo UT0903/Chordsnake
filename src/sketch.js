@@ -60,10 +60,6 @@ function draw() {
   fill(255, );
 }
 
-
-
-
-
 function keyPressed() {
   Pd.start();
   if (keyCode === UP_ARROW) {
