@@ -7,26 +7,28 @@ var s;
 var scl = 40;
 var food;
 var pannel_height = 80;
+var board_heigth, board_width;
 var candy;
 var state = 0;
 
 function preload() {
-  img_start = loadImage('chordsnake.png');
+  img_start = loadImage('../asset/chordsnake.png');
+  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png')];
 }
 
 function setup() {
-  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png')];
-
   createCanvas(800, 800 + pannel_height);
-  s = new Snake();
+  board_heigth = height - pannel_height;
+  board_width = width;
+  s = new Snake(board_heigth, board_width);
   frameRate(10);
   pickLocation();
   
 }
 
 function pickLocation() {
-  var cols = floor(width / scl);
-  var rows = floor(height / scl);
+  var cols = floor(board_heigth / scl);
+  var rows = floor(board_width / scl);
   food = createVector(floor(random(cols)), floor(random(rows)));
   food.mult(scl);
 
@@ -40,12 +42,12 @@ function pickLocation() {
 function draw_background() {
   stroke("white");
   fill("black");
-  rect(0, height - pannel_height, width, pannel_height);
+  rect(0, board_heigth, board_width, pannel_height);
   stroke("#8ecc39");
   drawingContext.shadowBlur = 32
   drawingContext.shadowColor = color("#8ecc39")
-  for (let i = 0; i < width; i = i + scl){
-    for (let j = 0; j < height - pannel_height; j = j + scl){
+  for (let i = 0; i < board_width; i = i + scl){
+    for (let j = 0; j < board_heigth; j = j + scl){
       if ((i/scl+j/scl) % 2) {
             fill("#8ecc39");
             rect(i, j, scl, scl);
@@ -63,11 +65,11 @@ function draw() {
   // noStroke()
   if (state == 0) {
     background("#8ecc39");
-    image(img_start, 0, width/4, width, width/2);
+    image(img_start, 0, board_width/4, board_width, board_width/2);
     glow(color(33, 58, 91, 100), 12);
     textAlign(CENTER, CENTER);
-    textSize(width / 20);
-    text("Press space to start", width/2, width*2/3);
+    textSize(board_width / 20);
+    text("Press space to start", board_width/2, board_width*2/3);
   } else if (state == 1) {
     draw_background();
     if (s.eat(food)) {
@@ -85,10 +87,10 @@ function draw() {
     background("#8ecc39");
     glow(color(33, 58, 91, 100), 12);
     textAlign(CENTER, CENTER);
-    textSize(width / 10);
-    text("Game over", width/2, width*1/2);
-    textSize(width / 20);
-    text("Press space to start a new game", width/2, width*3/5);
+    textSize(board_width / 10);
+    text("Game over", board_width/2, board_width*1/2);
+    textSize(board_width / 20);
+    text("Press space to start a new game", board_width/2, board_width*3/5);
   }
 }
 

@@ -3,13 +3,15 @@
 // http://patreon.com/codingtrain
 // Code for: https://youtu.be/AaGK-fj-BAM
 
-function Snake() {
+function Snake(board_heigth, board_width) {
   this.x = 0;
   this.y = 0;
   this.xspeed = 1;
   this.yspeed = 0;
   this.total = 0;
   this.tail = [];
+  this.board_heigth = board_heigth
+  this.board_width = board_width
 
   this.eat = function(pos) {
     var d = dist(this.x, this.y, pos.x, pos.y);
@@ -51,8 +53,8 @@ function Snake() {
     this.x = this.x + this.xspeed * scl;
     this.y = this.y + this.yspeed * scl;
 
-    this.x = constrain(this.x, 0, width - scl);
-    this.y = constrain(this.y, 0, height - scl);
+    this.x = constrain(this.x, 0, this.board_width - scl);
+    this.y = constrain(this.y, 0, this.board_height - scl);
   }
 
   this.show = function() {
