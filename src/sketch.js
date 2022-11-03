@@ -83,10 +83,9 @@ function draw() {
     s.show();
     fill(255, 0, 100);
     image(candy[0], food.x, food.y, scl, scl);
-    glow(color(33, 58, 91, 100), 12);
-    textSize(48);
+    textSize(32);
     textAlign(CENTER, CENTER);
-    text('C', food.x + 20, food.y + 20);
+    text('C', food.x, food.y);
     fill(255, );
   } else if (state == 2) {
     background("#8ecc39");
