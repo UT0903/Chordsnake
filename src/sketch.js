@@ -12,16 +12,18 @@ var state = 0;
 
 function preload() {
   img_start = loadImage('chordsnake.png');
+  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png')];
+  //font = loadFont('assets/SourceSansPro-Regular.otf');
 }
 
 function setup() {
-  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png')];
+  
 
   createCanvas(800, 800 + pannel_height);
   s = new Snake();
   frameRate(10);
   pickLocation();
-  
+
 }
 
 function pickLocation() {
@@ -39,7 +41,7 @@ function pickLocation() {
 
 function draw_background() {
   stroke("white");
-  fill("black");
+  fill("#ADD8E6");
   rect(0, height - pannel_height, width, pannel_height);
   stroke("#8ecc39");
   drawingContext.shadowBlur = 32
@@ -80,6 +82,10 @@ function draw() {
     s.show();
     fill(255, 0, 100);
     image(candy[0], food.x, food.y, scl, scl);
+    glow(color(33, 58, 91, 100), 12);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text('C', food.x + 20, food.y + 20);
     fill(255, );
   } else if (state == 2) {
     background("#8ecc39");
