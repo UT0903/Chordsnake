@@ -69,14 +69,18 @@ function keyPressed() {
   if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     Pd.send('note', [60]);
+    Pd.send('timbre', [0]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     Pd.send('note', [62]);
+    Pd.send('timbre', [1]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     Pd.send('note', [64]);
+    Pd.send('timbre', [2]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     Pd.send('note', [65]);
+    Pd.send('timbre', [3]);
   }
 }
