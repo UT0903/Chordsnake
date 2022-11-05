@@ -69,8 +69,8 @@ function draw_background() {
   fill("black");
   rect(0, board_heigth, board_width, pannel_height);
   stroke("#8ecc39");
-  drawingContext.shadowBlur = 32
-  drawingContext.shadowColor = color("#8ecc39")
+  // drawingContext.shadowBlur = 32
+  // drawingContext.shadowColor = color("#8ecc39")
   for (let i = 0; i < board_width; i = i + scl){
     for (let j = 0; j < board_heigth; j = j + scl){
       if ((i/scl+j/scl) % 2) {
@@ -124,8 +124,8 @@ function draw() {
 }
 
 function glow(glowColor, blurriness){
-  drawingContext.shadowBlur = blurriness;
-  drawingContext.shadowColor = glowColor;
+  // drawingContext.shadowBlur = blurriness;
+  // drawingContext.shadowColor = glowColor;
 }
 
 function keyPressed() {
@@ -133,33 +133,33 @@ function keyPressed() {
     state = 1;
     s.total++;
     Pd.start();
-    Pd.send('timbre', [1]);
     notes = new Array(0, 4, 7, 11);
     nextIdx = 3;
     pickLocation();
+    Pd.send('timbre', [1]);
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
     Pd.send('note', [midiNote]);
     // Pd.send('timbre', [0]);
-    // Pd.send('chord_note', [midiNote]);
+    Pd.send('chord_note', [midiNote]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     let midiNote = notes[1] + 60;
     Pd.send('note', [midiNote]);
     // Pd.send('timbre', [1]);
-    // Pd.send('chord_note', [midiNote]);
+    Pd.send('chord_note', [midiNote]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     let midiNote = notes[2] + 60;
     Pd.send('note', [midiNote]);
     // Pd.send('timbre', [2]);
-    // Pd.send('chord_note', [midiNote]);
+    Pd.send('chord_note', [midiNote]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     let midiNote = notes[3] + 60;
     Pd.send('note', [midiNote]);
     // Pd.send('timbre', [3]);
-    // Pd.send('chord_note', [midiNote]);
+    Pd.send('chord_note', [midiNote]);
   }
 }
