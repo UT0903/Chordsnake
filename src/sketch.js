@@ -18,6 +18,7 @@ function preload() {
 }
 
 function setup() {
+  getAudioContext().suspend();
   createCanvas(800, 800 + pannel_height);
   board_heigth = height - pannel_height;
   board_width = width;
@@ -32,13 +33,7 @@ function pickLocation() {
   var rows = floor(board_width / scl);
   food = createVector(floor(random(cols)), floor(random(rows)));
   food.mult(scl);
-
 }
-
-// function mousePressed() {
-//   state = 1;
-//   // s.total++;
-// }
 
 function draw_background() {
   stroke("white");
@@ -107,13 +102,26 @@ function keyPressed() {
   if (keyCode == 32) {
     state = 1;
     s.total++;
+    Pd.start();
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
+    Pd.send('note', [60]);
+    // Pd.send('timbre', [0]);
+    Pd.send('chord_note', [60]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
+    Pd.send('note', [64]);
+    // Pd.send('timbre', [1]);
+    Pd.send('chord_note', [64]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
+    Pd.send('note', [67]);
+    // Pd.send('timbre', [2]);
+    Pd.send('chord_note', [67]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
+    Pd.send('note', [71]);
+    // Pd.send('timbre', [3]);
+    Pd.send('chord_note', [71]);
   }
 }
