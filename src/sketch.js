@@ -23,6 +23,8 @@ function pickLocation() {
 }
 
 function mousePressed() {
+  Pd.start();
+  Pd.send('timbre', [3])
   s.total++;
 }
 
@@ -61,22 +63,25 @@ function draw() {
 }
 
 function keyPressed() {
-  Pd.start();
   if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     Pd.send('note', [60]);
-    Pd.send('timbre', [0]);
+    // Pd.send('timbre', [0]);
+    Pd.send('chord_note', [60]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
-    Pd.send('note', [62]);
-    Pd.send('timbre', [1]);
+    Pd.send('note', [64]);
+    // Pd.send('timbre', [1]);
+    Pd.send('chord_note', [64]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
-    Pd.send('note', [64]);
-    Pd.send('timbre', [2]);
+    Pd.send('note', [67]);
+    // Pd.send('timbre', [2]);
+    Pd.send('chord_note', [67]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
-    Pd.send('note', [65]);
-    Pd.send('timbre', [3]);
+    Pd.send('note', [71]);
+    // Pd.send('timbre', [3]);
+    Pd.send('chord_note', [71]);
   }
 }
