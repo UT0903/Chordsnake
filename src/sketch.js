@@ -5,14 +5,14 @@
 
 var s;
 var scl = 40;
-var food;
-var nextNote;
-var pannel_height = 80;
-var board_heigth, board_width;
+var foodList = [];
+var nextNote = [];
+var pannelHeight = 80;
+var boardHeigth, boardWidth;
 var candy;
 var state = 0;
-
 var notes;
+const CHORD_CANDY_NUM = 3;
 
 function insertNote(note) {
   notes.shift();
@@ -49,30 +49,36 @@ function preload() {
 
 function setup() {
   getAudioContext().suspend();
-  createCanvas(800, 800 + pannel_height);
-  board_heigth = height - pannel_height;
-  board_width = width;
-  s = new Snake(board_heigth, board_width);
+  createCanvas(800, 800 + pannelHeight);
+  boardHeigth = height - pannelHeight;
+  boardWidth = width;
+  s = new Snake(boardHeigth, boardWidth);
   frameRate(10);
 }
 
-function pickLocation() {
-  var cols = floor(board_heigth / scl);
-  var rows = floor(board_width / scl);
-  food = createVector(floor(random(cols)), floor(random(rows)));
+function pickLocation(i) {
+  var cols = floor(boardHeigth / scl);
+  var rows = floor(boardWidth / scl);
+  let food = createVector(floor(random(cols)), floor(random(rows)));
   food.mult(scl);
-  nextNote = getNextNote();
+  if (i >= foodList.length) {
+    foodList.push(food);
+    nextNote.push(getNextNote());
+  } else {
+    foodList[i] = food;
+    nextNote[i] = getNextNote();
+  }
 }
 
 function draw_background() {
   stroke("white");
   fill("black");
-  rect(0, board_heigth, board_width, pannel_height);
+  rect(0, boardHeigth, boardWidth, pannelHeight);
   stroke("#8ecc39");
   // drawingContext.shadowBlur = 32
   // drawingContext.shadowColor = color("#8ecc39")
-  for (let i = 0; i < board_width; i = i + scl){
-    for (let j = 0; j < board_heigth; j = j + scl){
+  for (let i = 0; i < boardWidth; i = i + scl){
+    for (let j = 0; j < boardHeigth; j = j + scl){
       if ((i/scl+j/scl) % 2) {
             fill("#8ecc39");
             rect(i, j, scl, scl);
@@ -85,41 +91,46 @@ function draw_background() {
   }
 }
 
+function draw_food() {
+  fill(255, 0, 100);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  for (let i = 0; i < foodList.length; i++) {
+    image(candy[0], foodList[i].x, foodList[i].y, scl, scl);
+    text(note2text[nextNote[i]], foodList[i].x, foodList[i].y);
+  }
+}
+
 function draw() {
   // background("#8ecc39");
   // noStroke()
   if (state == 0) {
     background("#8ecc39");
-    image(img_start, 0, board_width/4, board_width, board_width/2);
-    glow(color(33, 58, 91, 100), 12);
+    image(img_start, 0, boardWidth/4, boardWidth, boardWidth/2);
     textAlign(CENTER, CENTER);
-    textSize(board_width / 20);
-    text("Press space to start", board_width/2, board_width*2/3);
+    textSize(boardWidth / 20);
+    text("Press space to start", boardWidth/2, boardWidth*2/3);
   } else if (state == 1) {
     draw_background();
-    if (s.eat(food)) {
-      insertNote(nextNote);
-      pickLocation();
+    let eaten = s.eat(foodList);
+    if (eaten != -1) {
+      insertNote(nextNote[eaten]);
+      pickLocation(eaten);
     }
     if (s.checkDeath()) {
       state = 2;
     }
     s.update();
     s.show();
-    fill(255, 0, 100);
-    image(candy[0], food.x, food.y, scl, scl);
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text(note2text[nextNote], food.x, food.y);
+    draw_food();
     fill(255, );
   } else if (state == 2) {
     background("#8ecc39");
-    glow(color(33, 58, 91, 100), 12);
     textAlign(CENTER, CENTER);
-    textSize(board_width / 10);
-    text("Game over", board_width/2, board_width*1/2);
-    textSize(board_width / 20);
-    text("Press space to start a new game", board_width/2, board_width*3/5);
+    textSize(boardWidth / 10);
+    text("Game over", boardWidth/2, boardWidth*1/2);
+    textSize(boardWidth / 20);
+    text("Press space to start a new game", boardWidth/2, boardWidth*3/5);
   }
 }
 
@@ -135,7 +146,9 @@ function keyPressed() {
     Pd.start();
     notes = new Array(0, 4, 7, 11);
     nextIdx = 3;
-    pickLocation();
+    for (let i = 0; i < CHORD_CANDY_NUM; i++) {
+      pickLocation(i);
+    }
     Pd.send('timbre', [1]);
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);

@@ -13,14 +13,15 @@ function Snake(board_heigth, board_width) {
   this.board_heigth = int(board_heigth);
   this.board_width = int(board_width);
 
-  this.eat = function(pos) {
-    var d = dist(this.x, this.y, pos.x, pos.y);
-    if (d < 1) {
-      this.total++;
-      return true;
-    } else {
-      return false;
+  this.eat = function(candies) {
+    for (let i = 0; i < candies.length; i++) {
+      var d = dist(this.x, this.y, candies[i].x, candies[i].y);
+      if (d < 1) {
+        this.total++;
+        return i;
+      }
     }
+    return -1;
   }
 
   this.dir = function(x, y) {
@@ -57,8 +58,8 @@ function Snake(board_heigth, board_width) {
     this.x = this.x + this.xspeed * scl;
     this.y = this.y + this.yspeed * scl;
 
-    this.x = constrain(this.x, 0, this.board_heigth - scl);
-    this.y = constrain(this.y, 0, this.board_width - scl);
+    this.x = (this.x + this.board_width) % this.board_width;
+    this.y = (this.y + this.board_heigth) % this.board_heigth;
   }
 
   this.show = function() {
