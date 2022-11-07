@@ -11,7 +11,7 @@ var pannelHeight = 80;
 var boardHeigth, boardWidth;
 var candy;
 var state = 0;
-var notes;
+var notes = new Array(0, 4, 7, 11);;
 var cur_timbre = 0;
 const CHORD_CANDY_NUM = 3;
 
@@ -89,10 +89,18 @@ function draw_background() {
   fill("black");
   rect(0, boardHeigth, boardWidth, pannelHeight);
   
+  // draw current timbre & notes in panel below 
   fill("yellow");
   textSize(20);
   textAlign(LEFT);
-  text("current timbre: " + id2timbre[cur_timbre], 10, boardHeigth + 30);
+  text("current timbre: " + id2timbre[cur_timbre], 10, boardHeigth + 20);
+  
+  let note_str = "current note: ";
+  for (let i = 0; i < notes.length; i++){
+    note_str += " " + note2text[notes[i]];
+  }
+  text(note_str, 10, boardHeigth + 50);
+  
   stroke("#8ecc39");
   // drawingContext.shadowBlur = 32
   // drawingContext.shadowColor = color("#8ecc39")
@@ -169,7 +177,6 @@ function keyPressed() {
     state = 1;
     s.total++;
     Pd.start();
-    notes = new Array(0, 4, 7, 11);
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
       pickLocation(i);
