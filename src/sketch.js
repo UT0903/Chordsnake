@@ -86,7 +86,7 @@ function pickLocation(i) {
 
 function draw_background() {
   stroke("white");
-  fill("black");
+  fill("gray");
   rect(0, boardHeigth, boardWidth, pannelHeight);
   
   // draw current timbre & notes in panel below 
