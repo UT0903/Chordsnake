@@ -6,14 +6,18 @@
 var s;
 var scl = 40;
 var foodList = [];
-var nextNote = [];
+
 var pannelHeight = 80;
 var boardHeigth, boardWidth;
+var cols;
+var rows;
+
 var candy;
 var state = 0;
-var notes = new Array(0, 4, 7, 11);;
+var notes = new Array(0, 4, 7, 11);
 var cur_timbre = 0;
-const CHORD_CANDY_NUM = 3;
+const CHORD_CANDY_NUM = 2;
+const TIMBRE_CANDY_NUM = 2;
 
 function insertNote(note) {
   notes.shift();
@@ -68,20 +72,8 @@ function setup() {
   boardWidth = width;
   s = new Snake(boardHeigth, boardWidth);
   frameRate(10);
-}
-
-function pickLocation(i) {
-  var cols = floor(boardHeigth / scl);
-  var rows = floor(boardWidth / scl);
-  let food = createVector(floor(random(cols)), floor(random(rows)));
-  food.mult(scl);
-  if (i >= foodList.length) {
-    foodList.push(food);
-    nextNote.push(getNextNote());
-  } else {
-    foodList[i] = food;
-    nextNote[i] = getNextNote();
-  }
+  cols = floor(boardHeigth / scl);
+  rows = floor(boardWidth / scl);
 }
 
 function draw_background() {
@@ -123,10 +115,11 @@ function draw_food() {
   textSize(32);
   textAlign(CENTER, CENTER);
   for (let i = 0; i < foodList.length; i++) {
-    image(candy[0], foodList[i].x, foodList[i].y, scl, scl);
-    text(note2text[nextNote[i]], foodList[i].x, foodList[i].y);
+    foodList[i].show(candy[0]);
   }
 }
+
+var counter = 0;
 
 function draw() {
   // background("#8ecc39");
@@ -138,11 +131,29 @@ function draw() {
     textSize(boardWidth / 20);
     text("Press space to start", boardWidth/2, boardWidth*2/3);
   } else if (state == 1) {
+    counter += 1;
+    if (counter > 10) {
+      counter = 0;
+      let noteId1 = getRandomInt(0, 3);
+      let noteId2 = noteId1;
+      while (noteId2 == noteId1) {
+        noteId2 = getRandomInt(0, 3);
+      }
+      const midiNote1 = notes[noteId1] + 60;
+      const midiNote2 = notes[noteId2] + 60;
+      Pd.send('chord_note', [midiNote1]);
+      Pd.send('chord_note', [midiNote2]);
+    }
     draw_background();
     let eaten = s.eat(foodList);
-    if (eaten != -1) {
-      insertNote(nextNote[eaten]);
-      pickLocation(eaten);
+    if (eaten != null) {
+      if (eaten instanceof ChordCandy) {
+        insertNote(eaten.content);
+        eaten.genNext(getNextNote());
+      } else if (eaten instanceof TimbreCandy) {
+        update_timbre(eaten.content)
+        eaten.genNext();
+      }
     }
     if (s.checkDeath()) {
       state = 2;
@@ -152,6 +163,7 @@ function draw() {
     draw_food();
     fill(255, );
   } else if (state == 2) {
+    foodList = []
     background("#8ecc39");
     textAlign(CENTER, CENTER);
     textSize(boardWidth / 10);
@@ -167,9 +179,9 @@ function glow(glowColor, blurriness){
   // drawingContext.shadowColor = glowColor;
 }
 
-function update_timbre(timbre_str){
-  cur_timbre = timbre2id[timbre_str];
-  Pd.send('timbre', [timbre2id[timbre_str]]);
+function update_timbre(timbre){
+  cur_timbre = timbre;
+  Pd.send('timbre', [timbre]);
 }
 
 function keyPressed() {
@@ -179,32 +191,30 @@ function keyPressed() {
     Pd.start();
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
-      pickLocation(i);
+      foodList.push(new ChordCandy(getNextNote()));
     }
-    update_timbre("drum");
+    for (let i = 0; i < TIMBRE_CANDY_NUM; i++) {
+      foodList.push(new TimbreCandy());
+    }
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
     Pd.send('note', [midiNote]);
-    update_timbre("drum");
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     let midiNote = notes[1] + 60;
     Pd.send('note', [midiNote]);
-    update_timbre("electronic");
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     let midiNote = notes[2] + 60;
     Pd.send('note', [midiNote]);
-    update_timbre('piano');
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     let midiNote = notes[3] + 60;
     Pd.send('note', [midiNote]);
-    update_timbre('swarmatron');
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   }
 }

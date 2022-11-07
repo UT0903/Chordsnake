@@ -123,7 +123,7 @@
 #X connect 38 0 39 0;
 #X connect 39 0 37 0;
 #X restore 441 446 pd piano;
-#N canvas 71 107 450 386 electronic 1;
+#N canvas 71 107 450 386 electronic 0;
 #X obj 135 26 inlet;
 #X obj 180 328 outlet~;
 #X obj 140 58 mtof;
@@ -139,6 +139,9 @@
 #X obj 177 288 *~ 0;
 #X obj 193 135 delay 250;
 #X floatatom 209 246 5 0 0 0 - - - 0;
+#X obj 248 36 loadbang;
+#X floatatom 238 96 5 0 0 0 - - - 0;
+#X msg 242 70 250;
 #X connect 0 0 2 0;
 #X connect 2 0 9 0;
 #X connect 3 0 4 0;
@@ -155,6 +158,9 @@
 #X connect 12 0 1 0;
 #X connect 13 0 11 0;
 #X connect 14 0 12 1;
+#X connect 15 0 17 0;
+#X connect 16 0 13 1;
+#X connect 17 0 16 0;
 #X restore 326 445 pd electronic;
 #N canvas 308 242 778 486 electronic_drum 1;
 #X obj 172 131 mtof;

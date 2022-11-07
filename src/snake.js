@@ -15,13 +15,13 @@ function Snake(board_heigth, board_width) {
 
   this.eat = function(candies) {
     for (let i = 0; i < candies.length; i++) {
-      var d = dist(this.x, this.y, candies[i].x, candies[i].y);
+      var d = dist(this.x, this.y, candies[i].pos.x, candies[i].pos.y);
       if (d < 1) {
         this.total++;
-        return i;
+        return candies[i];
       }
     }
-    return -1;
+    return null;
   }
 
   this.dir = function(x, y) {
