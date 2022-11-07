@@ -120,6 +120,7 @@ function draw() {
     text("Game over", board_width/2, board_width*1/2);
     textSize(board_width / 20);
     text("Press space to start a new game", board_width/2, board_width*3/5);
+    Pd.send('reset_chord', ['bang']);
   }
 }
 
