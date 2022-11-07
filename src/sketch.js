@@ -150,7 +150,7 @@ function keyPressed() {
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
       pickLocation(i);
     }
-    Pd.send('timbre', [1]);
+    Pd.send('timbre', [0]);
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
