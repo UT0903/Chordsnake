@@ -1,10 +1,19 @@
 class Candy {
     content;
     pos;
-    constructor(content) {
+    img;
+    constructor(content, img) {
         this.content = content;
         this.pos = this.genNextPos();
+        this.img = img;
     }
+
+    genNext(content, img) {
+        this.pos = this.genNextPos();
+        this.content = content;
+        this.img = img;
+    }
+    
     genNextPos() {
         return createVector(floor(random(cols)), floor(random(rows))).mult(scl);
     }
@@ -16,30 +25,22 @@ class Candy {
 }
 
 class ChordCandy extends Candy {
-    constructor(content) {
-        super(content);
-    }
-    genNext(content) {
-        this.pos = this.genNextPos();
-        this.content = content;
+    constructor(content, img) {
+        super(content, img);
     }
 
-    show(img) {
-        image(img, this.pos.x, this.pos.y, scl, scl);
+    show() {
+        image(this.img, this.pos.x, this.pos.y, scl, scl);
         text(note2text[this.content], this.pos.x, this.pos.y);
     }
 }
 
 class TimbreCandy extends Candy {
-    constructor() {
-        super(getRandomInt(0, 3));
-    }
-    genNext() {
-        this.pos = this.genNextPos();
-        this.content = getRandomInt(0, 3);
+    constructor(content, img) {
+        super(content, img);
     }
 
-    show(img) {
-        image(img, this.pos.x, this.pos.y, scl, scl);
+    show() {
+        image(this.img, this.pos.x, this.pos.y, scl, scl);
     }
 }

@@ -59,9 +59,16 @@ function getNextNote() {
   return scales[nextIdx];
 }
 
+var nextTimbreIdx = 3;
+function getNextTimbre() {
+  nextTimbreIdx = (nextTimbreIdx + 1) % 4;
+  return nextTimbreIdx;
+}
+
 function preload() {
   img_start = loadImage('../asset/chordsnake.png');
-  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png'), loadImage('../asset/c4.png')];
+  chord = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png'), loadImage('../asset/c4.png')];
+  timbre = [loadImage('../asset/electronic.png'), loadImage('../asset/piano.png'), loadImage('../asset/swarmatron.png'), loadImage('../asset/drum.png')]
   //font = loadFont('assets/SourceSansPro-Regular.otf');
 }
 
@@ -115,7 +122,7 @@ function draw_food() {
   textSize(32);
   textAlign(CENTER, CENTER);
   for (let i = 0; i < foodList.length; i++) {
-    foodList[i].show(candy[0]);
+    foodList[i].show();
   }
 }
 
@@ -149,10 +156,12 @@ function draw() {
     if (eaten != null) {
       if (eaten instanceof ChordCandy) {
         insertNote(eaten.content);
-        eaten.genNext(getNextNote());
+        let nextNote = getNextNote();
+        eaten.genNext(nextNote, chord[nextNote % 4]);
       } else if (eaten instanceof TimbreCandy) {
-        update_timbre(eaten.content)
-        eaten.genNext();
+        update_timbre(eaten.content);
+        let nextTimbre = getNextTimbre();
+        eaten.genNext(nextTimbre, timbre[nextTimbre]);
       }
     }
     if (s.checkDeath()) {
@@ -191,10 +200,12 @@ function keyPressed() {
     Pd.start();
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
-      foodList.push(new ChordCandy(getNextNote()));
+      let nextNote = getNextNote();
+      foodList.push(new ChordCandy(nextNote, chord[nextNote % 4]));
     }
     for (let i = 0; i < TIMBRE_CANDY_NUM; i++) {
-      foodList.push(new TimbreCandy());
+      let nextTimbre = getNextTimbre();
+      foodList.push(new TimbreCandy(nextTimbre, timbre[nextTimbre]));
     }
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
