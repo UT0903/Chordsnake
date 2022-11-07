@@ -6,13 +6,18 @@
 var s;
 var scl = 40;
 var foodList = [];
-var nextNote = [];
+
 var pannelHeight = 80;
 var boardHeigth, boardWidth;
+var cols;
+var rows;
+
 var candy;
 var state = 0;
 var notes;
-const CHORD_CANDY_NUM = 3;
+
+const CHORD_CANDY_NUM = 2;
+const TIMBRE_CANDY_NUM = 2;
 
 function insertNote(note) {
   notes.shift();
@@ -54,21 +59,33 @@ function setup() {
   boardWidth = width;
   s = new Snake(boardHeigth, boardWidth);
   frameRate(10);
+  cols = floor(boardHeigth / scl);
+  rows = floor(boardWidth / scl);
 }
 
-function pickLocation(i) {
-  var cols = floor(boardHeigth / scl);
-  var rows = floor(boardWidth / scl);
-  let food = createVector(floor(random(cols)), floor(random(rows)));
-  food.mult(scl);
-  if (i >= foodList.length) {
-    foodList.push(food);
-    nextNote.push(getNextNote());
-  } else {
-    foodList[i] = food;
-    nextNote[i] = getNextNote();
-  }
-}
+// function pickChordLocation(i) {
+//   var cols = floor(boardHeigth / scl);
+//   var rows = floor(boardWidth / scl);
+//   let candy = createVector(floor(random(cols)), floor(random(rows)));
+//   candy.mult(scl);
+//   if (i >= foodList.length) {
+//     foodList.push({'candy' : candy, 'content' : getNextNote()});
+//   } else {
+//     foodList[i] = {'candy' : candy, 'content' : getNextNote()};
+//   }
+// }
+
+// function pickTimbreLocation(i) {
+//   var cols = floor(boardHeigth / scl);
+//   var rows = floor(boardWidth / scl);
+//   let food = createVector(floor(random(cols)), floor(random(rows)));
+//   food.mult(scl);
+//   if (i >= timbreList.length) {
+//     timbreList.push({'candy' : candy, 'content' : getRandomInt(0, 3)});
+//   } else {
+//     timbreList[i] = {'candy' : candy, 'content' : getRandomInt(0, 3)};
+//   }
+// }
 
 function draw_background() {
   stroke("white");
@@ -96,8 +113,7 @@ function draw_food() {
   textSize(32);
   textAlign(CENTER, CENTER);
   for (let i = 0; i < foodList.length; i++) {
-    image(candy[0], foodList[i].x, foodList[i].y, scl, scl);
-    text(note2text[nextNote[i]], foodList[i].x, foodList[i].y);
+    foodList[i].show(candy[0]);
   }
 }
 
@@ -113,9 +129,14 @@ function draw() {
   } else if (state == 1) {
     draw_background();
     let eaten = s.eat(foodList);
-    if (eaten != -1) {
-      insertNote(nextNote[eaten]);
-      pickLocation(eaten);
+    if (eaten != null) {
+      if (eaten instanceof ChordCandy) {
+        insertNote(eaten.content);
+        eaten.genNext(getNextNote());
+      } else if (eaten instanceof TimbreCandy) {
+        Pd.send('timbre', [eaten.content]);
+        eaten.genNext();
+      }
     }
     if (s.checkDeath()) {
       state = 2;
@@ -148,7 +169,10 @@ function keyPressed() {
     notes = new Array(0, 4, 7, 11);
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
-      pickLocation(i);
+      foodList.push(new ChordCandy(getNextNote()));
+    }
+    for (let i = 0; i < TIMBRE_CANDY_NUM; i++) {
+      foodList.push(new TimbreCandy());
     }
     Pd.send('timbre', [1]);
   } else if (keyCode === UP_ARROW) {
