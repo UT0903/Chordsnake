@@ -61,7 +61,7 @@ function getNextNote() {
 
 var nextTimbreIdx = 3;
 function getNextTimbre() {
-  nextTimbreIdx = (nextTimbreIdx + 1) % 4;
+  nextTimbreIdx = (nextTimbreIdx + 1) % Object.keys(id2timbre).length;
   return nextTimbreIdx;
 }
 
