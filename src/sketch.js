@@ -37,16 +37,16 @@ const note2text = [
 ];
 
 const timbre2id = {
-  "drum": 0,
-  "electronic": 1,
-  "piano": 2,
-  "swarmatron": 3
+  "drum": 3,
+  "electronic": 0,
+  "piano": 1,
+  "swarmatron": 2
 };
 const id2timbre = {
-  0: "drum",
-  1: "electronic",
-  2: "piano",
-  3: "swarmatron"
+  3: "drum",
+  0: "electronic",
+  1: "piano",
+  2: "swarmatron"
 };
 
 var nextIdx = 3;
