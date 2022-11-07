@@ -12,6 +12,7 @@ var boardHeigth, boardWidth;
 var candy;
 var state = 0;
 var notes;
+var cur_timbre = 0;
 const CHORD_CANDY_NUM = 3;
 
 function insertNote(note) {
@@ -34,6 +35,19 @@ const scales = [
 const note2text = [
   'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'G', 'G#', 'A', 'A#', 'B'
 ];
+
+const timbre2id = {
+  "drum": 0,
+  "electronic": 1,
+  "piano": 2,
+  "swarmatron": 3
+};
+const id2timbre = {
+  0: "drum",
+  1: "electronic",
+  2: "piano",
+  3: "swarmatron"
+};
 
 var nextIdx = 3;
 function getNextNote() {
@@ -74,6 +88,11 @@ function draw_background() {
   stroke("white");
   fill("black");
   rect(0, boardHeigth, boardWidth, pannelHeight);
+  
+  fill("yellow");
+  textSize(20);
+  textAlign(LEFT);
+  text("current timbre: " + id2timbre[cur_timbre], 10, boardHeigth + 30);
   stroke("#8ecc39");
   // drawingContext.shadowBlur = 32
   // drawingContext.shadowColor = color("#8ecc39")
@@ -140,6 +159,11 @@ function glow(glowColor, blurriness){
   // drawingContext.shadowColor = glowColor;
 }
 
+function update_timbre(timbre_str){
+  cur_timbre = timbre2id[timbre_str];
+  Pd.send('timbre', [timbre2id[timbre_str]]);
+}
+
 function keyPressed() {
   if (keyCode == 32) {
     state = 1;
@@ -150,30 +174,30 @@ function keyPressed() {
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
       pickLocation(i);
     }
-    Pd.send('timbre', [0]);
+    update_timbre("drum");
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [0]);
-    Pd.send('chord_note', [midiNote]);
+    update_timbre("drum");
+    //Pd.send('chord_note', [midiNote]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     let midiNote = notes[1] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [1]);
-    Pd.send('chord_note', [midiNote]);
+    update_timbre("electronic");
+    //Pd.send('chord_note', [midiNote]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     let midiNote = notes[2] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [2]);
-    Pd.send('chord_note', [midiNote]);
+    update_timbre('piano');
+    //Pd.send('chord_note', [midiNote]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     let midiNote = notes[3] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [3]);
-    Pd.send('chord_note', [midiNote]);
+    update_timbre('swarmatron');
+    //Pd.send('chord_note', [midiNote]);
   }
 }
