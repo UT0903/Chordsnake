@@ -13,7 +13,7 @@ var state = 0;
 
 function preload() {
   img_start = loadImage('../asset/chordsnake.png');
-  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png')];
+  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png'), loadImage('../asset/c4.png')];
   //font = loadFont('assets/SourceSansPro-Regular.otf');
 }
 
