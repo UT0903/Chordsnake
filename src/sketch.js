@@ -119,6 +119,8 @@ function draw_food() {
   }
 }
 
+var counter = 0;
+
 function draw() {
   // background("#8ecc39");
   // noStroke()
@@ -129,6 +131,19 @@ function draw() {
     textSize(boardWidth / 20);
     text("Press space to start", boardWidth/2, boardWidth*2/3);
   } else if (state == 1) {
+    counter += 1;
+    if (counter > 10) {
+      counter = 0;
+      let noteId1 = getRandomInt(0, 3);
+      let noteId2 = noteId1;
+      while (noteId2 == noteId1) {
+        noteId2 = getRandomInt(0, 3);
+      }
+      const midiNote1 = notes[noteId1] + 60;
+      const midiNote2 = notes[noteId2] + 60;
+      Pd.send('chord_note', [midiNote1]);
+      Pd.send('chord_note', [midiNote2]);
+    }
     draw_background();
     let eaten = s.eat(foodList);
     if (eaten != null) {
@@ -185,21 +200,21 @@ function keyPressed() {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
     Pd.send('note', [midiNote]);
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     let midiNote = notes[1] + 60;
     Pd.send('note', [midiNote]);
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     let midiNote = notes[2] + 60;
     Pd.send('note', [midiNote]);
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     let midiNote = notes[3] + 60;
     Pd.send('note', [midiNote]);
-    //Pd.send('chord_note', [midiNote]);
+    // Pd.send('chord_note', [midiNote]);
   }
 }
