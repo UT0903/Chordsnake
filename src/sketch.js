@@ -14,8 +14,8 @@ var rows;
 
 var candy;
 var state = 0;
-var notes;
-
+var notes = new Array(0, 4, 7, 11);
+var cur_timbre = 0;
 const CHORD_CANDY_NUM = 2;
 const TIMBRE_CANDY_NUM = 2;
 
@@ -40,6 +40,19 @@ const note2text = [
   'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'G', 'G#', 'A', 'A#', 'B'
 ];
 
+const timbre2id = {
+  "drum": 3,
+  "electronic": 0,
+  "piano": 1,
+  "swarmatron": 2
+};
+const id2timbre = {
+  3: "drum",
+  0: "electronic",
+  1: "piano",
+  2: "swarmatron"
+};
+
 var nextIdx = 3;
 function getNextNote() {
   nextIdx = (nextIdx + 1) % scales.length;
@@ -48,7 +61,7 @@ function getNextNote() {
 
 function preload() {
   img_start = loadImage('../asset/chordsnake.png');
-  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png')];
+  candy = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png'), loadImage('../asset/c4.png')];
   //font = loadFont('assets/SourceSansPro-Regular.otf');
 }
 
@@ -63,34 +76,23 @@ function setup() {
   rows = floor(boardWidth / scl);
 }
 
-// function pickChordLocation(i) {
-//   var cols = floor(boardHeigth / scl);
-//   var rows = floor(boardWidth / scl);
-//   let candy = createVector(floor(random(cols)), floor(random(rows)));
-//   candy.mult(scl);
-//   if (i >= foodList.length) {
-//     foodList.push({'candy' : candy, 'content' : getNextNote()});
-//   } else {
-//     foodList[i] = {'candy' : candy, 'content' : getNextNote()};
-//   }
-// }
-
-// function pickTimbreLocation(i) {
-//   var cols = floor(boardHeigth / scl);
-//   var rows = floor(boardWidth / scl);
-//   let food = createVector(floor(random(cols)), floor(random(rows)));
-//   food.mult(scl);
-//   if (i >= timbreList.length) {
-//     timbreList.push({'candy' : candy, 'content' : getRandomInt(0, 3)});
-//   } else {
-//     timbreList[i] = {'candy' : candy, 'content' : getRandomInt(0, 3)};
-//   }
-// }
-
 function draw_background() {
   stroke("white");
   fill("black");
   rect(0, boardHeigth, boardWidth, pannelHeight);
+  
+  // draw current timbre & notes in panel below 
+  fill("yellow");
+  textSize(20);
+  textAlign(LEFT);
+  text("current timbre: " + id2timbre[cur_timbre], 10, boardHeigth + 20);
+  
+  let note_str = "current note: ";
+  for (let i = 0; i < notes.length; i++){
+    note_str += " " + note2text[notes[i]];
+  }
+  text(note_str, 10, boardHeigth + 50);
+  
   stroke("#8ecc39");
   // drawingContext.shadowBlur = 32
   // drawingContext.shadowColor = color("#8ecc39")
@@ -134,7 +136,7 @@ function draw() {
         insertNote(eaten.content);
         eaten.genNext(getNextNote());
       } else if (eaten instanceof TimbreCandy) {
-        Pd.send('timbre', [eaten.content]);
+        update_timbre(eaten.content)
         eaten.genNext();
       }
     }
@@ -146,6 +148,7 @@ function draw() {
     draw_food();
     fill(255, );
   } else if (state == 2) {
+    foodList = []
     background("#8ecc39");
     textAlign(CENTER, CENTER);
     textSize(boardWidth / 10);
@@ -161,12 +164,16 @@ function glow(glowColor, blurriness){
   // drawingContext.shadowColor = glowColor;
 }
 
+function update_timbre(timbre){
+  cur_timbre = timbre;
+  Pd.send('timbre', [timbre]);
+}
+
 function keyPressed() {
   if (keyCode == 32) {
     state = 1;
     s.total++;
     Pd.start();
-    notes = new Array(0, 4, 7, 11);
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
       foodList.push(new ChordCandy(getNextNote()));
@@ -174,30 +181,25 @@ function keyPressed() {
     for (let i = 0; i < TIMBRE_CANDY_NUM; i++) {
       foodList.push(new TimbreCandy());
     }
-    Pd.send('timbre', [1]);
   } else if (keyCode === UP_ARROW) {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [0]);
-    Pd.send('chord_note', [midiNote]);
+    //Pd.send('chord_note', [midiNote]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     let midiNote = notes[1] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [1]);
-    Pd.send('chord_note', [midiNote]);
+    //Pd.send('chord_note', [midiNote]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     let midiNote = notes[2] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [2]);
-    Pd.send('chord_note', [midiNote]);
+    //Pd.send('chord_note', [midiNote]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     let midiNote = notes[3] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('timbre', [3]);
-    Pd.send('chord_note', [midiNote]);
+    //Pd.send('chord_note', [midiNote]);
   }
 }
