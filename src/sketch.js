@@ -15,7 +15,7 @@ var rows;
 var candy;
 var state = 0;
 var notes = new Array(0, 4, 7, 11);
-var cur_timbre = 0;
+var cur_timbre = 1;
 const CHORD_CANDY_NUM = 2;
 const TIMBRE_CANDY_NUM = 2;
 
@@ -44,13 +44,13 @@ const timbre2id = {
   "drum": 3,
   "electronic": 0,
   "piano": 1,
-  "swarmatron": 2
+  "electric guitar": 2
 };
 const id2timbre = {
   3: "drum",
   0: "electronic",
   1: "piano",
-  2: "swarmatron"
+  2: "electric guitar"
 };
 
 var nextIdx = 3;
@@ -68,7 +68,7 @@ function getNextTimbre() {
 function preload() {
   img_start = loadImage('../asset/chordsnake.png');
   chord = [loadImage('../asset/c1.png'), loadImage('../asset/c2.png'), loadImage('../asset/c3.png'), loadImage('../asset/c4.png')];
-  timbre = [loadImage('../asset/electronic.png'), loadImage('../asset/piano.png'), loadImage('../asset/swarmatron.png'), loadImage('../asset/drum.png')]
+  timbre = [loadImage('../asset/electronic.png'), loadImage('../asset/piano.png'), loadImage('../asset/guitar.png'), loadImage('../asset/drum.png')]
   //font = loadFont('assets/SourceSansPro-Regular.otf');
 }
 
@@ -198,6 +198,7 @@ function keyPressed() {
     state = 1;
     s.total++;
     Pd.start();
+    update_timbre(cur_timbre);
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
       let nextNote = getNextNote();
