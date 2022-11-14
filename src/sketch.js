@@ -198,6 +198,7 @@ function keyPressed() {
     state = 1;
     s.total++;
     Pd.start();
+    cur_timbre = 3;
     update_timbre(cur_timbre);
     nextIdx = 3;
     for (let i = 0; i < CHORD_CANDY_NUM; i++) {
@@ -212,21 +213,17 @@ function keyPressed() {
     s.dir(0, -1);
     let midiNote = notes[0] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === DOWN_ARROW) {
     s.dir(0, 1);
     let midiNote = notes[1] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === RIGHT_ARROW) {
     s.dir(1, 0);
     let midiNote = notes[2] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('chord_note', [midiNote]);
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1, 0);
     let midiNote = notes[3] + 60;
     Pd.send('note', [midiNote]);
-    // Pd.send('chord_note', [midiNote]);
   }
 }
