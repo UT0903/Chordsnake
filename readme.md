@@ -1,4 +1,4 @@
-# 用法
+# How to run this code
 
 1. 在 VScode 裡面裝Live Server套件
 ![liver_server](live_server.png)
