@@ -9,3 +9,6 @@
 
 2. 在src資料夾裡面有index.html，點擊右鍵選 "Open with live server"
 3. 邏輯code寫在sketch.js裡面
+
+# Notice
+記得使用safari瀏覽器開啟
